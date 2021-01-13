@@ -47,13 +47,14 @@ export default {
         // Our method to GET results from a Laravel endpoint
 		getResults(page = 1) {
 			axios.get('http://localhost/laravue/public/todo?page=' + page)
-                .then(response => this.tasks = response.data)
+                .then(response => this.tasks = response.data.data)
                 .catch(error => console.log(error));
 		}
     },
     created(){
         axios.get("http://localhost/laravue/public/todo")
-             .then((response) => this.tasks = response.data)
+             .then((response) => this.tasks = response.data.data)
+            // .then((response) => console.log(response.data))
              .catch((error) => console.log(error))
        console.log("Task Component Loaded");
     }
