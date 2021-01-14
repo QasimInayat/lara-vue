@@ -8,9 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue').default
 import VueRouter from 'vue-router'
-import "font-awesome/css/font-awesome.min.css";
-Vue.use(VueRouter);
 
+Vue.use(VueRouter);
+Vue.component("pagination", require("laravel-vue-pagination"));
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -44,6 +44,10 @@ const routes = [
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+
+Vue.prototype.$base_url = window.location.origin;
+Vue.prototype.$hostapi_url = window.location.origin + "/api/";
 
 const router  = new VueRouter({
     routes

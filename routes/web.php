@@ -22,6 +22,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
-Route::resource('todo', TodoController::class);
+
 
 

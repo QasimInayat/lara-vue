@@ -18,13 +18,14 @@
                                 <th width="35%">Action</th>
 
                             </tr>
-                            <tr v-for="t in tasks" :key="t.id">
+                            <tr v-for="t in tasks.data" :key="t.id">
                                 <td>{{t.id}}</td>
                                 <td>{{t.name}}</td>
                                 <td><button class="btn btn-success btn-sm">Edit</button>|<button class=" btn btn-danger btn-sm">Delete</button>|<button class=" btn btn-primary btn-sm">Show</button></td>
                             </tr>
+                             <pagination :data="tasks" :limit="4" @pagination-change-page="getResults"></pagination>
                         </table>
-                        <pagination :data="tasks" @pagination-change-page="getResults"></pagination>
+
                     </div>
                     <div class="card-footer">
                         <small><i class="fa fa-copyright" aria-hidden="true"></i>Copyrights</small>
@@ -36,7 +37,7 @@
 </template>
 
 <script>
-Vue.component('pagination', require('laravel-vue-pagination'));
+
 export default {
     data(){
         return{
@@ -46,17 +47,16 @@ export default {
     methods:{
         // Our method to GET results from a Laravel endpoint
 		getResults(page = 1) {
-			axios.get('http://localhost/laravue/public/todo?page=' + page)
-                .then(response => this.tasks = response.data.data)
+			axios.get(this.$hostapi_url+'todo?page=' + page)
+                .then((res)=>{
+                    this.tasks=res.data;
+                    console.log(this.tasks)
+                })
                 .catch(error => console.log(error));
 		}
     },
-    created(){
-        axios.get("http://localhost/laravue/public/todo")
-             .then((response) => this.tasks = response.data.data)
-            // .then((response) => console.log(response.data))
-             .catch((error) => console.log(error))
-       console.log("Task Component Loaded");
+    mounted(){
+        this.getResults();
     }
 }
 </script>
