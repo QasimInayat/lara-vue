@@ -15,7 +15,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todo = Todo::latest()->paginate(1);
+        $todo = Todo::orderBy('id', 'DESC')->paginate(10);
         return response()->json($todo);
     }
 
@@ -37,7 +37,14 @@ class TodoController extends Controller
      */
     public function store(TodoRequest $request)
     {
-        //
+        $store = Todo::create([
+            'name' => $request->name,
+        ]);
+
+        if(!empty($store->id)){
+            $todo = Todo::orderBy('id', 'DESC')->paginate(10);
+            return response()->json($todo);
+        }
     }
 
     /**

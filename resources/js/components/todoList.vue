@@ -8,7 +8,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 text-right mb-3">
-                                <button class="btn btn-primary">ADD NEW</button>
+                                <a class="btn btn-primary" data-toggle="modal" href="#addTodoModal">ADD NEW</a>
                             </div>
                         </div>
                         <table class="table"  width="100%" >
@@ -18,8 +18,8 @@
                                 <th width="35%">Action</th>
 
                             </tr>
-                            <tr v-for="t in tasks.data" :key="t.id">
-                                <td>{{t.id}}</td>
+                            <tr v-for="(t, index) in tasks.data" :key="t.id">
+                                <td>{{++index}}</td>
                                 <td>{{t.name}}</td>
                                 <td><button class="btn btn-success btn-sm">Edit</button>|<button class=" btn btn-danger btn-sm">Delete</button>|<button class=" btn btn-primary btn-sm">Show</button></td>
                             </tr>
@@ -33,12 +33,19 @@
                 </div>
             </div>
         </div>
+         <div id="modal">
+            <addTodoComponent @recordAdded="refreshRecord"></addTodoComponent>
+        </div>
     </div>
+
 </template>
 
 <script>
-
+import addTodoComponent from './createModal.vue';
 export default {
+    components: {
+        addTodoComponent,
+    },
     data(){
         return{
             tasks:{},
@@ -50,10 +57,13 @@ export default {
 			axios.get(this.$hostapi_url+'todo?page=' + page)
                 .then((res)=>{
                     this.tasks=res.data;
-                    console.log(this.tasks)
                 })
                 .catch(error => console.log(error));
-		}
+        },
+        refreshRecord(record){
+            this.tasks  = record.data;
+            record.success = "";
+        },
     },
     mounted(){
         this.getResults();
