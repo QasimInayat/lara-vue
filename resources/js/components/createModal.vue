@@ -5,7 +5,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add a Task</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" @click="clearModal" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                     </div>
@@ -16,12 +16,15 @@
                                     <p class="alert alert-success" v-if="success.length > 0">{{success}}</p>
                                     <label for="name">ADD TASK</label>
                                     <textarea class="form-control" name="name" id="name" rows="3" v-model="addTodo"></textarea>
+                                    <div v-if="errors.name"  class="mt-1">
+                                        <span v-for="err of errors.name" class="text-danger">{{err}}<br></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" @click="clearModal" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" @click="addRecord">Save</button>
                     </div>
                 </div>
@@ -34,6 +37,7 @@
         data(){
             return {
                 success: '',
+                errors: [],
                 addTodo: '',
             }
         },
@@ -45,11 +49,18 @@
                 .then(data => {
                     this.$emit('recordAdded', data);
                     this.success = "Task Added";
+                    this.addTodo="";
+                    this.success="";
                 })
-                .catch(error => console.log(error))
-                this.addTodo="";
-                this.success="";
+                .catch(error =>{
+                    this.errors = error.response.data.errors;
+                })
 
+            },
+            clearModal(){
+                this.errors = [];
+                this.record = "";
+                this.success = "";
             }
         }
     }
