@@ -55,7 +55,7 @@ class TodoController extends Controller
      */
     public function show(Todo $todo)
     {
-        //
+        return response()->json($todo);
     }
 
     /**
@@ -66,7 +66,7 @@ class TodoController extends Controller
      */
     public function edit(Todo $todo)
     {
-        //
+        return response()->json($todo);
     }
 
     /**
@@ -78,7 +78,12 @@ class TodoController extends Controller
      */
     public function update(TodoRequest $request, Todo $todo)
     {
-        //
+        $todo->name = $request->name;
+        $todo->save();
+        if(!empty($todo->id)){
+            $todo = Todo::orderBy('id', 'DESC')->paginate(10);
+            return response()->json($todo);
+        }
     }
 
     /**
@@ -87,8 +92,10 @@ class TodoController extends Controller
      * @param  \App\Models\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Todo $todo)
+    public function destroy(Todo $todo, Request $request)
     {
-        //
+        $todo->delete();
+        $todo = Todo::orderBy('id', 'DESC')->paginate(10);
+        return response()->json($todo);
     }
 }
